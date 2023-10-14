@@ -1,0 +1,17 @@
+*.class
+
+*.log
+
+.idea/
+
+.settings/
+.classpath
+.project
+
+.gradle/
+
+target/
+
+.DS_Store
+
+*.jks
