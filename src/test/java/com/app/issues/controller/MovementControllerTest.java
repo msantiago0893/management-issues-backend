@@ -1,37 +1,38 @@
 package com.app.issues.controller;
+
 import com.app.issues.entity.MovementEntity;
 import com.app.issues.service.MovementService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MovementController.class)
-@AutoConfigureMockMvc
 class MovementControllerTest {
-  @Autowired
-  private MockMvc mockMvc;
-
   @Mock
   private MovementService movementService;
 
   @InjectMocks
   private MovementController movementController;
 
+  private MockMvc mockMvc;
+
   @BeforeEach
   public void setUp() {
+    MockitoAnnotations.initMocks(this);
+    mockMvc = MockMvcBuilders.standaloneSetup(movementController).build();
+
     when(movementService.findAll()).thenReturn(Arrays.asList(new MovementEntity(), new MovementEntity()));
     when(movementService.findById(1L)).thenReturn(new MovementEntity());
-    when(movementService.findByName("exampleName")).thenReturn(new MovementEntity());
+    when(movementService.findByName("closed")).thenReturn(new MovementEntity());
   }
 
   @Test
@@ -48,7 +49,7 @@ class MovementControllerTest {
 
   @Test
   public void testGetByName() throws Exception {
-    mockMvc.perform(get("/api/v1/operation").param("name", "exampleName"))
+    mockMvc.perform(get("/api/v1/operation").param("name", "open"))
             .andExpect(status().isOk());
   }
 }
